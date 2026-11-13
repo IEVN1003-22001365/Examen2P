@@ -1,0 +1,82 @@
+<section class="bg-white border-t-4 border-red-600 rounded-lg shadow p-5" [formGroup]="form">
+  <h2 class="text-lg font-semibold text-gray-900 mb-4">Datos del cliente y pizza</h2>
+
+  <!-- Datos del cliente -->
+  <div formGroupName="cliente" class="grid gap-4 md:grid-cols-4">
+    <div>
+      <label for="nombre" class="block mb-1 text-sm font-medium text-gray-900">Nombre</label>
+      <input id="nombre" type="text" formControlName="nombre" placeholder="María Juárez"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" />
+      @if (campoInvalido('cliente', 'nombre')) {
+        <p class="mt-1 text-xs text-red-600">Escribe el nombre completo (mínimo 3 letras).</p>
+      }
+    </div>
+    <div>
+      <label for="direccion" class="block mb-1 text-sm font-medium text-gray-900">Dirección</label>
+      <input id="direccion" type="text" formControlName="direccion" placeholder="5 de mayo"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" />
+      @if (campoInvalido('cliente', 'direccion')) {
+        <p class="mt-1 text-xs text-red-600">La dirección es obligatoria.</p>
+      }
+    </div>
+    <div>
+      <label for="telefono" class="block mb-1 text-sm font-medium text-gray-900">Teléfono</label>
+      <input id="telefono" type="text" formControlName="telefono" placeholder="477-787-23"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" />
+      @if (campoInvalido('cliente', 'telefono')) {
+        <p class="mt-1 text-xs text-red-600">Solo números y guiones (7 a 15 caracteres).</p>
+      }
+    </div>
+    <div>
+      <label for="fecha" class="block mb-1 text-sm font-medium text-gray-900">Fecha de compra</label>
+      <input id="fecha" type="date" formControlName="fecha"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" />
+      @if (campoInvalido('cliente', 'fecha')) {
+        <p class="mt-1 text-xs text-red-600">Elige la fecha.</p>
+      }
+    </div>
+  </div>
+
+  <!-- Datos de la pizza -->
+  <div formGroupName="pizza" class="grid gap-4 md:grid-cols-3 mt-6">
+    <fieldset class="border border-gray-200 rounded-lg p-4">
+      <legend class="px-2 text-sm font-medium text-gray-900">Tamaño pizza</legend>
+      @for (t of catalogo?.tamanos; track t.nombre) {
+        <div class="flex items-center mb-2">
+          <input type="radio" [id]="'t-' + t.nombre" formControlName="tamano" [value]="t.nombre"
+            class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500" />
+          <label [for]="'t-' + t.nombre" class="ms-2 text-sm text-gray-900">{{ t.nombre }} ${{ t.precio }}</label>
+        </div>
+      }
+      @if (campoInvalido('pizza', 'tamano')) {
+        <p class="mt-1 text-xs text-red-600">Elige un tamaño.</p>
+      }
+    </fieldset>
+
+    <fieldset class="border border-gray-200 rounded-lg p-4" formGroupName="ingredientes">
+      <legend class="px-2 text-sm font-medium text-gray-900">Ingredientes</legend>
+      @for (i of catalogo?.ingredientes; track i.nombre) {
+        <div class="flex items-center mb-2">
+          <input type="checkbox" [id]="'i-' + i.nombre" [formControlName]="i.nombre"
+            class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 rounded focus:ring-red-500" />
+          <label [for]="'i-' + i.nombre" class="ms-2 text-sm text-gray-900">{{ i.nombre }} ${{ i.precio }}</label>
+        </div>
+      }
+    </fieldset>
+
+    <div class="flex flex-col justify-between">
+      <div>
+        <label for="numPizzas" class="block mb-1 text-sm font-medium text-gray-900">Num. de pizzas</label>
+        <input id="numPizzas" type="number" min="1" formControlName="numPizzas"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5" />
+        @if (campoInvalido('pizza', 'numPizzas')) {
+          <p class="mt-1 text-xs text-red-600">Indica cuántas pizzas (1 a 50).</p>
+        }
+      </div>
+      <button type="button" (click)="agregar()"
+        class="mt-4 text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5">
+        Agregar
+      </button>
+    </div>
+  </div>
+</section>

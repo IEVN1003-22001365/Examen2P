@@ -1,0 +1,23 @@
+<header class="bg-red-700 text-white shadow">
+  <div class="max-w-7xl mx-auto px-4 py-4 flex items-center gap-3">
+    <h1 class="text-xl font-bold">Pizzería · Registro de pedidos</h1>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+  <!-- Mensaje flash -->
+  @if (mensaje) {
+    <div role="alert" class="flex items-center justify-between p-4 text-sm rounded-lg"
+      [class]="mensaje.tipo === 'exito' ? 'text-green-800 bg-green-100' : mensaje.tipo === 'error' ? 'text-red-800 bg-red-100' : 'text-blue-800 bg-blue-100'">
+      <span class="font-medium">{{ mensaje.texto }}</span>
+      <button type="button" (click)="cerrarMensaje()" class="ms-4 text-lg leading-none" aria-label="Cerrar">&times;</button>
+    </div>
+  }
+
+  <app-formulario-pedido />
+
+  <div class="grid gap-6 lg:grid-cols-5">
+    <div class="lg:col-span-3"><app-detalle-pedido /></div>
+    <div class="lg:col-span-2"><app-ventas /></div>
+  </div>
+</main>

@@ -1,0 +1,46 @@
+<section class="bg-white border-t-4 border-gray-800 rounded-lg shadow p-5 h-full">
+  <h2 class="text-lg font-semibold text-gray-900 mb-4">Detalle del pedido</h2>
+
+  <div class="relative overflow-x-auto rounded-lg border border-gray-200">
+    <table class="w-full text-sm text-left text-gray-600">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+        <tr>
+          <th class="px-4 py-3">Tamaño</th>
+          <th class="px-4 py-3">Ingredientes</th>
+          <th class="px-4 py-3 text-center">Num. Pizzas</th>
+          <th class="px-4 py-3 text-right">SubTotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (i of items; track i.id) {
+          <tr (click)="seleccionar(i.id)"
+            class="border-b cursor-pointer hover:bg-red-50"
+            [class.bg-red-100]="seleccionado === i.id">
+            <td class="px-4 py-3 font-medium text-gray-900">{{ i.tamano }}</td>
+            <td class="px-4 py-3">{{ i.ingredientes }}</td>
+            <td class="px-4 py-3 text-center">{{ i.num_pizzas }}</td>
+            <td class="px-4 py-3 text-right">{{ i.subtotal | currency }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="4" class="px-4 py-6 text-center text-gray-400">Aún no hay pizzas en el pedido.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <p class="mt-3 text-right text-base font-semibold text-gray-900">Total: {{ total | currency }}</p>
+
+  <div class="flex justify-between mt-4">
+    <button type="button" (click)="quitar()"
+      class="text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5">
+      Quitar
+    </button>
+    <button type="button" (click)="terminar()" [disabled]="enviando"
+      class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 disabled:opacity-60">
+      Terminar
+    </button>
+  </div>
+  <p class="mt-2 text-xs text-gray-400">Haz clic en una fila para seleccionarla y luego pulsa «Quitar».</p>
+</section>

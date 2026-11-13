@@ -1,0 +1,106 @@
+<section class="bg-white border-t-4 border-yellow-400 rounded-lg shadow p-5 h-full">
+  <h2 class="text-lg font-semibold text-gray-900 mb-4">Ventas {{ modo === 'dia' ? 'del día' : 'del mes' }}</h2>
+
+  <!-- Selector de tipo de consulta -->
+  <div class="inline-flex rounded-lg shadow-sm mb-4" role="group">
+    <button type="button" (click)="cambiarModo('dia')"
+      class="px-4 py-2 text-sm font-medium border border-gray-200 rounded-s-lg"
+      [class]="modo === 'dia' ? 'bg-yellow-400 text-gray-900' : 'bg-white text-gray-900 hover:bg-gray-100'">
+      Por día
+    </button>
+    <button type="button" (click)="cambiarModo('mes')"
+      class="px-4 py-2 text-sm font-medium border border-gray-200 rounded-e-lg"
+      [class]="modo === 'mes' ? 'bg-yellow-400 text-gray-900' : 'bg-white text-gray-900 hover:bg-gray-100'">
+      Por mes
+    </button>
+  </div>
+
+  <div class="flex gap-3 items-end">
+    <div class="flex-1">
+      @if (modo === 'dia') {
+        <label for="dia" class="block mb-1 text-sm font-medium text-gray-900">Día de la semana</label>
+        <select id="dia" [(ngModel)]="dia"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-yellow-400 focus:border-yellow-400 block w-full p-2.5 capitalize">
+          @for (d of dias; track d) {
+            <option [value]="d">{{ d }}</option>
+          }
+        </select>
+      } @else {
+        <label for="mes" class="block mb-1 text-sm font-medium text-gray-900">Mes</label>
+        <select id="mes" [(ngModel)]="mes"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-yellow-400 focus:border-yellow-400 block w-full p-2.5 capitalize">
+          @for (m of meses; track m) {
+            <option [value]="m">{{ m }}</option>
+          }
+        </select>
+      }
+    </div>
+    <button type="button" (click)="consultar()"
+      class="text-gray-900 bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-200 font-medium rounded-lg text-sm px-5 py-2.5">
+      Ventas totales por {{ modo === 'dia' ? 'día' : 'mes' }}
+    </button>
+  </div>
+
+  @if (resultado) {
+    <div class="mt-5">
+      @for (v of resultado.ventas; track v.id) {
+        <div class="flex items-center justify-between py-2 border-b border-gray-100">
+          <div>
+            <p class="font-medium text-gray-900">{{ v.nombre_cliente }}</p>
+            <p class="text-xs text-gray-500">{{ v.fecha_pedido | date: 'dd/MM/yyyy' }}</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-semibold text-gray-900">{{ v.total | currency }}</span>
+            <button type="button" (click)="verDetalle(v.id)"
+              class="text-xs text-blue-700 hover:underline">Ver detalle</button>
+          </div>
+        </div>
+      } @empty {
+        <p class="text-sm text-gray-500">No hay ventas registradas para <span class="capitalize">{{ etiqueta }}</span>.</p>
+      }
+      <p class="mt-4 text-lg font-bold text-gray-900">
+        Total acumulado ({{ etiqueta }}): {{ resultado.total | currency }}
+      </p>
+    </div>
+  }
+</section>
+
+<!-- Detalle de una venta (modal estilo Flowbite) -->
+@if (detalle) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 p-4" (click)="cerrarDetalle()">
+    <div class="bg-white rounded-lg shadow w-full max-w-lg p-5" (click)="$event.stopPropagation()">
+      <div class="flex items-start justify-between mb-3">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900">Venta #{{ detalle.venta.id }}</h3>
+          <p class="text-sm text-gray-500">
+            {{ detalle.venta.nombre_cliente }} · {{ detalle.venta.direccion }} · {{ detalle.venta.telefono }}
+          </p>
+          <p class="text-sm text-gray-500">{{ detalle.venta.fecha_pedido | date: 'dd/MM/yyyy' }}</p>
+        </div>
+        <button type="button" (click)="cerrarDetalle()"
+          class="text-gray-400 hover:text-gray-900 text-xl leading-none" aria-label="Cerrar">&times;</button>
+      </div>
+      <table class="w-full text-sm text-left text-gray-600">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+          <tr>
+            <th class="px-3 py-2">Tamaño</th>
+            <th class="px-3 py-2">Ingredientes</th>
+            <th class="px-3 py-2 text-center">Cant.</th>
+            <th class="px-3 py-2 text-right">SubTotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (i of detalle.items; track i.id) {
+            <tr class="border-b">
+              <td class="px-3 py-2">{{ i.tamano }}</td>
+              <td class="px-3 py-2">{{ i.ingredientes }}</td>
+              <td class="px-3 py-2 text-center">{{ i.num_pizzas }}</td>
+              <td class="px-3 py-2 text-right">{{ i.subtotal | currency }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      <p class="mt-3 text-right font-bold text-gray-900">Total: {{ detalle.venta.total | currency }}</p>
+    </div>
+  </div>
+}

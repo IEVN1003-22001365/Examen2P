@@ -1,0 +1,30 @@
+SET NAMES utf8mb4;
+CREATE DATABASE IF NOT EXISTS pizzeria CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE pizzeria;
+
+CREATE TABLE IF NOT EXISTS ventas (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre_cliente VARCHAR(100) NOT NULL,
+  direccion VARCHAR(150) NOT NULL,
+  telefono VARCHAR(20) NOT NULL,
+  fecha_pedido DATE NOT NULL,
+  total DECIMAL(10,2) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS detalle_venta (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  venta_id INT NOT NULL,
+  tamano VARCHAR(20) NOT NULL,
+  ingredientes VARCHAR(150) NOT NULL,
+  num_pizzas INT NOT NULL,
+  subtotal DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY (venta_id) REFERENCES ventas(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS detalle_temp (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  tamano VARCHAR(20) NOT NULL,
+  ingredientes VARCHAR(150) NOT NULL,
+  num_pizzas INT NOT NULL,
+  subtotal DECIMAL(10,2) NOT NULL
+);
